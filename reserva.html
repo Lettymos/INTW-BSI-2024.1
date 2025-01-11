@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva - Condomínio Olivermar</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+            display: none; /* Escondido por padrão */
+        }
+        .success {
+            color: green;
+            font-size: 1em;
+            display: none; /* Escondido por padrão */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Reserva - Condomínio Olivermar</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="index.html#precos">Preços</a></li>
+                <li><a href="#contato">Fale Conosco</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="form-section">
+        <h2>Formulário de Reserva</h2>
+        <form id="reservationForm" onsubmit="return validateForm()">
+            <label for="nome">Nome completo *</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="telefone">Telefone (com DDD) *</label>
+            <input type="tel" id="telefone" name="telefone" required placeholder="(XX) XXXXX-XXXX">
+            <div id="telefoneError" class="error">Por favor, insira apenas números.</div>
+
+            <label for="checkin">Check-in *</label>
+            <input type="date" id="checkin" name="checkin" required onchange="validateDates()">
+
+            <label for="checkout">Check-out *</label>
+            <input type="date" id="checkout" name="checkout" required onchange="validateDates()">
+            <div id="dateError" class="error">A data de check-out deve ser posterior à data de check-in e não pode ser uma data passada.</div>
+
+            <label for="apartamento">Apartamento *</label>
+            <select id="apartamento" name="apartamento" required>
+                <option value="Apto 1">Apto 1 (Térreo)</option>
+                <option value="Apto 2">Apto 2 (Térreo)</option>
+                <option value="Apto 3">Apto 3 (1º andar)</option>
+                <option value="Apto 4">Apto 4 (1º andar)</option>
+            </select>
+
+            <label for="adultos">Quantidade de adultos (> 5 anos) *</label>
+            <select id="adultos" name="adultos" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+
+            <label for="criancas">Quantidade de crianças (< 5 anos) *</label>
+            <select id="criancas" name="criancas" required>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="successMessage" class="success">Formulário enviado com sucesso!</div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Condomínio Olivermar. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        function validateForm() {
+            const telefoneInput = document.getElementById('telefone');
+            const telefoneError = document.getElementById('telefoneError');
+            const telefoneValue = telefoneInput.value;
+            const successMessage = document.getElementById('successMessage');
+
+            // Verifica se o valor contém caracteres que não são números
+            if (!/^\d*$/.test(telefoneValue.replace(/[() -]/g, ''))) {
+                telefoneError.style.display = 'block'; // Mostra a mensagem de erro
+                successMessage.style.display = 'none'; // Esconde a mensagem de sucesso
+                return false; // Impede o envio do formulário
+            }
+
+            telefoneError.style.display = 'none'; // Esconde a mensagem de erro
+
+            // Se todas as validações passarem, mostra a mensagem de sucesso
+            successMessage.style.display = 'block'; 
+            return false; // Impede o envio do formulário para demonstração
+        }
+
+        function validateDates() {
+            const checkinInput = document.getElementById('checkin');
+            const checkoutInput = document.getElementById('checkout');
+            const dateError = document.getElementById('dateError');
+
+            const checkinDate = new Date(checkinInput.value);
+            const checkoutDate = new Date(checkoutInput.value);
+            const today = new Date();
+
+            // Remove hora para comparação
+            today.setHours(0, 0, 0, 0);
+            checkinDate.setHours(0, 0, 0, 0);
+            checkoutDate.setHours(0, 0, 0, 0);
+
+            // Verifica se as datas são válidas
+            if (checkinDate < today || checkoutDate < today || checkoutDate <= checkinDate) {
+                dateError.style.display = 'block'; // Mostra a mensagem de erro
+            } else {
+                dateError.style.display = 'none'; // Esconde a mensagem de erro
+            }
+        }
+    </script>
+</body>
+</html>
